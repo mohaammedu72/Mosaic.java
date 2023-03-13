@@ -1,0 +1,62 @@
+import javax.swing.JPanel;
+
+import java.util.Random;
+import java.awt.Graphics;
+import java.awt.Color;
+import java.awt.Font;
+
+class Tile extends JPanel {
+    private int redValue, greenValue, blueValue;
+    private String letter;
+    private boolean isCircle;
+
+    Tile() {
+        super();
+        setRandomValues();
+    }
+
+    final public void setRandomValues() {
+        redValue = getNumberBetween(0, 255);
+        greenValue = getNumberBetween(0, 255);
+        blueValue = getNumberBetween(0, 255);
+
+        letter = Character.toString((char) getNumberBetween(65, 90));
+        isCircle = getRandomBoolean();
+    }
+
+    private static boolean getRandomBoolean() {
+        Random random = new Random();
+        return random.nextBoolean();
+    }
+
+    private static int getNumberBetween(int min, int max) {
+        Random myRandom = new Random();
+        return min + myRandom.nextInt(max - min + 1);
+    }
+
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        int panelWidth = getWidth();
+        int panelHeight = getHeight();
+
+        g.setColor(new Color(redValue, greenValue, blueValue));
+        if (isCircle) {
+            g.fillOval(10, 10, panelWidth - 20, panelHeight - 20);
+        } else {
+            g.fillRect(10, 10, panelWidth - 20, panelHeight - 20);
+        }
+
+        g.setColor(new Color(getContrastingColor(redValue), getContrastingColor(greenValue), getContrastingColor(blueValue)));
+
+        final int fontSize = Math.min(panelWidth, panelHeight) / 4;
+        g.setFont(new Font("Arial", Font.PLAIN, fontSize));
+        int stringX = (panelWidth / 2) - 8;
+        int stringY = (panelHeight / 2) + 8;
+        g.drawString(letter, stringX, stringY);
+    }
+
+    private static int getContrastingColor(int colorIn) {
+        return ((colorIn + 128) % 256);
+    }
+}
